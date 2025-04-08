@@ -12,7 +12,7 @@ const InterviewTipsPage = () => {
   const startupName = location.state?.startup || null;
 
   const handleBack = () => {
-    navigate("/", { 
+    navigate("/home", { 
       state: { 
         fromInterviewTips: true,
         startup: startupName

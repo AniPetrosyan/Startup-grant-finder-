@@ -10,7 +10,7 @@ interface BottomNavigationProps {
 const BottomNavigation: React.FC<BottomNavigationProps> = ({ activeTab }) => {
   return (
     <div className="w-full h-16 bg-white border-t grid grid-cols-4">
-      <Link to="/index" className="flex flex-col items-center justify-center">
+      <Link to="/home" className="flex flex-col items-center justify-center">
         <div className={activeTab === "Home" ? "bg-[#E4F2E2] rounded-full px-3 py-1 flex flex-col items-center" : "flex flex-col items-center"}>
           <Home 
             size={24} 
