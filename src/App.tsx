@@ -12,7 +12,8 @@ import OpportunityDetailPage from "./pages/OpportunityDetailPage";
 import ApplicationChecklistPage from "./pages/ApplicationChecklistPage";
 import InterviewTipsPage from "./pages/InterviewTipsPage";
 import DecisionTipsPage from "./pages/DecisionTipsPage";
-import { Button } from "@/components/ui/button";
+import Begin from "./pages/Begin";
+import Login from "./pages/Login";
 
 const queryClient = new QueryClient();
 
@@ -23,7 +24,9 @@ const App = () => (
       <Sonner />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          <Route path="/" element={<Begin />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/index" element={<Index />} />
           <Route path="/explore" element={<ExplorePage />} />
           <Route path="/saved" element={<SavedPage />} />
           <Route path="/profile" element={<ProfilePage />} />
