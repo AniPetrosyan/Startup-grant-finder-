@@ -22,7 +22,7 @@ const ApplicationChecklistPage = () => {
   const handleBack = () => {
     const startupName = id === "venture-lab" ? "Venture Lab" : "Y Combinator";
     
-    navigate("/", { 
+    navigate("/home", { 
       state: { 
         fromApply: true,
         startup: startupName,
