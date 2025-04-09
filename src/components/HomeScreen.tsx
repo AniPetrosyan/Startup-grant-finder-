@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState } from "react";
 import StartupCard from "./StartupCard";
 import ApplicationStep from "./ApplicationStep";
@@ -18,15 +17,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ selectedStartup, onSelectStartu
 
   // Check if coming back from various pages to activate appropriate steps
   useEffect(() => {
-    if (selectedStartup) {
-      // Check if we came from opportunity detail (step 1) or application page
-      if (location.state?.fromOpportunityDetail || location.state?.fromApplication) {
-        setInterviewActive(true);
-      }
-      
-      // Check if we came from interview tips page (step 2)
-      if (location.state?.fromInterviewTips) {
-        setInterviewActive(true);
+    // Reset states when no startup is selected
+    if (!selectedStartup) {
+      setInterviewActive(false);
+      setDecisionActive(false);
+      return;
+    }
+
+    // Check if we came from opportunity detail (step 1) or application page
+    if (location.state?.fromOpportunityDetail || location.state?.fromApplication) {
+      setInterviewActive(true);
+      setDecisionActive(false);
+    }
+    
+    // Check if we came from interview tips page (step 2)
+    if (location.state?.fromInterviewTips) {
+      setInterviewActive(true);
+      if (location.state?.activateDecision) {
         setDecisionActive(true);
       }
     }

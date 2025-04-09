@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -15,7 +14,8 @@ const InterviewTipsPage = () => {
     navigate("/home", { 
       state: { 
         fromInterviewTips: true,
-        startup: startupName
+        startup: startupName,
+        activateDecision: true
       } 
     });
   };
