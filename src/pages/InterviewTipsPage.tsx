@@ -4,20 +4,23 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
+import { useParams } from "react-router-dom";
 
 const InterviewTipsPage = () => {
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
   const location = useLocation();
   
-  const startupName = location.state?.startup || null;
+  const startupName = id === "venture-lab" ? "Venture Lab" : "Y Combinator";
 
   const handleBack = () => {
-    navigate("/home", { 
-      state: { 
-        fromInterviewTips: true,
-        startup: startupName
-      } 
-    });
+    navigate(`/opportunity/${id}`);
+    // navigate("/home", { 
+    //   state: { 
+    //     fromInterviewTips: true,
+    //     startup: startupName
+    //   } 
+    // });
   };
 
   return (

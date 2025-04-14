@@ -20,7 +20,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ selectedStartup, onSelectStartu
   useEffect(() => {
     if (selectedStartup) {
       // Check if we came from opportunity detail (step 1) or application page
-      if (location.state?.fromOpportunityDetail || location.state?.fromApplication) {
+      if (location.state?.fromOpportunityDetail || location.state?.fromApplicationChecklistPage) {
         setInterviewActive(true);
       }
       
@@ -87,7 +87,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ selectedStartup, onSelectStartu
             progress="0%"
             applicationDate="2/15/2025"
             isSelected={selectedStartup === "Y Combinator"}
-            onClick={() => onSelectStartup("Y Combinator")}
+            onClick={() => navigate("/opportunity/y-combinator")}
           />
           
           <StartupCard 
@@ -96,7 +96,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ selectedStartup, onSelectStartu
             progress="0%"
             applicationDate="2/15/2025"
             isSelected={selectedStartup === "Venture Lab"}
-            onClick={() => onSelectStartup("Venture Lab")}
+            onClick={() => navigate("/opportunity/venture-lab")}
           />
         </div>
           

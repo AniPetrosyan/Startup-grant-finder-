@@ -22,13 +22,13 @@ const ApplicationChecklistPage = () => {
   const handleBack = () => {
     const startupName = id === "venture-lab" ? "Venture Lab" : "Y Combinator";
     
-    navigate("/home", { 
-      state: { 
-        fromApply: true,
-        startup: startupName,
-        fromApplication: true 
-      } 
-    });
+    navigate(`/opportunity/${id}`);
+    //   state: { 
+    //     fromApply: true,
+    //     startup: startupName,
+    //     fromApplication: true 
+    //   } 
+    // });
     
     toast({
       title: "Progress saved",

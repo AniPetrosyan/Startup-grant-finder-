@@ -4,20 +4,17 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
+import { useParams } from "react-router-dom";
 
 const DecisionTipsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { id } = useParams<{ id: string }>();
   
   const startupName = location.state?.startup || null;
 
   const handleBack = () => {
-    navigate("/home", { 
-      state: { 
-        fromInterviewTips: true,
-        startup: startupName
-      } 
-    });
+    navigate(`/opportunity/${id}`);
   };
 
   return (
