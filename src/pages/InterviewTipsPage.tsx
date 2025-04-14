@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
 import { useParams } from "react-router-dom";
+import ApplicationStep from "@/components/ApplicationStep";
 
 const InterviewTipsPage = () => {
   const navigate = useNavigate();
@@ -67,6 +68,14 @@ const InterviewTipsPage = () => {
                   If launched, be ready to discuss user behavior, growth, retention, and key
                   numbers. It's fine to have metrics written down to reference.
                 </p>
+              </div>
+
+              <div onClick={() => navigate(`/decision-tips/${id}`)} className="cursor-pointer">
+                <ApplicationStep
+                  number={3}
+                  title="Decision"
+                  isActive={true}
+                />
               </div>
             </div>
           </div>
