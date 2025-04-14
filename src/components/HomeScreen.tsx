@@ -100,7 +100,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ selectedStartup, onSelectStartu
           />
         </div>
           
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <h3 className="text-xl font-semibold text-[#45625D] mb-4">Application Process</h3>
           {selectedStartup ? null : (
             <p className="mb-4 text-gray-700">You must select a start-up first.</p>
@@ -127,8 +127,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ selectedStartup, onSelectStartu
                 isActive={selectedStartup !== null && decisionActive} 
               />
             </div>
-          </div>
-        </div>
+          </div> 
+        </div> */}
       </div>
       
       <BottomNavigation activeTab="Home" />
