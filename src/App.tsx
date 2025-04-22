@@ -16,6 +16,7 @@ import Begin from "./pages/BeginPage";
 import Login from "./pages/LoginPage";
 import SignUp from "./pages/SignUpPage";
 import SignUpInfoPage from "./pages/SignUpInfoPage";
+import Intro from "./pages/IntroPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Begin />} />
+          <Route path="/intro" element={<Intro />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signup-info" element={<SignUpInfoPage />} />

@@ -13,7 +13,7 @@ const SignUp = () => {
     const navigate = useNavigate();
 
     const handleClick = () => {
-        navigate(`/signup-info`);
+        navigate(`/intro`);
     };
 
     return (
@@ -21,7 +21,7 @@ const SignUp = () => {
             <PhoneFrame>
                 <div className="px-8 flex flex-col h-full">
                     <div className="h-full flex flex-col items-center justify-center">
-                        <p className="text-2xl font-bold mb-10 text-[#45625D]">Create an account</p>
+                        <p className="text-2xl font-bold mb-10 text-[#45625D]">Welcome to Pomegrant!</p>
                         <Input
                             placeholder="Enter Your Email"
                             value={email}
