@@ -74,7 +74,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ selectedStartup, onSelectStartu
         </div>
           
         <div className="mb-8">
-          <h3 className="text-xl font-semibold text-[#45625D] mb-4">Recommended Start-ups</h3>
+          <h3 className="text-xl font-semibold text-[#45625D] mb-4">Recommended Grants</h3>
           {selectedStartup ? (
             <p className="mb-4 text-gray-700">Press {selectedStartup === "Venture Lab" ? "Venture Lab" : "Y Combinator"} again to deselect:</p>
           ) : (
