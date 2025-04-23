@@ -7,11 +7,25 @@ import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
 import { toast } from "@/components/ui/use-toast";
 import ApplicationStep from "@/components/ApplicationStep";
+import { useLocation } from "react-router-dom";
+import { useEffect } from "react";
 
 const ApplicationChecklistPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [industry, setIndustry] = useState<string | null>(null);
+  const [stage, setStage] = useState<string | null>(null);
+  const [area, setArea] = useState<string | null>(null);
+  const location = useLocation();
+
+  // Update the states based on the location state
+  useEffect(() => {
+    // Set the industry, stage, and area from the location state
+    setIndustry(location.state?.industry || null);
+    setStage(location.state?.stage || null);
+    setArea(location.state?.location || null);
+  }, [location]);
 
   const handleCheck = (itemId: string) => {
     setCheckedItems(prev => ({
@@ -23,13 +37,13 @@ const ApplicationChecklistPage = () => {
   const handleBack = () => {
     const startupName = id === "venture-lab" ? "Venture Lab" : "Y Combinator";
 
-    navigate(`/opportunity/${id}`);
-    //   state: { 
-    //     fromApply: true,
-    //     startup: startupName,
-    //     fromApplication: true 
-    //   } 
-    // });
+    navigate(`/opportunity/${id}`, {
+      state: {
+        industry: industry,
+        stage: stage,
+        location: area
+      }
+    });
 
     toast({
       title: "Progress saved",
@@ -126,20 +140,26 @@ const ApplicationChecklistPage = () => {
 
               </div>
               <div className="bg-white rounded-md border">
-              <div onClick={() => navigate(`/interview-tips/${id}`)} className="cursor-pointer">
-                <ApplicationStep
-                  number={2}
-                  title="Interview"
-                  isActive={true}
-                />
-              </div>
+                <div onClick={() => navigate(`/interview-tips/${id}`, {
+                  state: {
+                    industry: industry,
+                    stage: stage,
+                    location: area
+                  }
+                })} className="cursor-pointer">
+                  <ApplicationStep
+                    number={2}
+                    title="Interview"
+                    isActive={true}
+                  />
+                </div>
 
+              </div>
             </div>
           </div>
-        </div>
 
-        <BottomNavigation activeTab="Home" />
-    </div>
+          <BottomNavigation activeTab="Home" />
+        </div>
       </PhoneFrame >
     </div >
   );

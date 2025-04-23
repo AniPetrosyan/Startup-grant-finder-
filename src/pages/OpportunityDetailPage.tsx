@@ -16,6 +16,9 @@ const OpportunityDetailPage = () => {
   const location = useLocation();
   const [interviewActive, setInterviewActive] = useState(false);
   const [decisionActive, setDecisionActive] = useState(false);
+  const [industry, setIndustry] = useState<string | null>(null);
+  const [stage, setStage] = useState<string | null>(null);
+  const [area, setArea] = useState<string | null>(null);
 
   // Check if coming back from various pages to activate appropriate steps
   useEffect(() => {
@@ -29,14 +32,31 @@ const OpportunityDetailPage = () => {
       setInterviewActive(true);
       setDecisionActive(true);
     }
+
+    // Set the industry, stage, and area from the location state
+    setIndustry(location.state?.industry || null);
+    setStage(location.state?.stage || null);
+    setArea(location.state?.location || null);
   }, [location]);
 
   const handleBack = () => {
-    navigate(`/home`);
+    navigate("/home", {
+      state: {
+        industry: industry,
+        stage: stage,
+        location: area
+      }
+    });
   };
 
   const handleApply = () => {
-    navigate(`/apply/${id}`);
+    navigate(`/apply/${id}`, {
+      state: {
+        industry: industry,
+        stage: stage,
+        location: area
+      }
+    });
   };
 
   // Define content for each opportunity
@@ -134,14 +154,26 @@ const OpportunityDetailPage = () => {
                       isActive={true}
                     />
                   </div>
-                  <div onClick={() => navigate(`/interview-tips/${id}`)} className="cursor-pointer">
+                  <div onClick={() => navigate(`/interview-tips/${id}`, {
+                    state: {
+                      industry: industry,
+                      stage: stage,
+                      location: area
+                    }
+                  })} className="cursor-pointer">
                     <ApplicationStep
                       number={2}
                       title="Interview"
                       isActive={interviewActive}
                     />
                   </div>
-                  <div onClick={() => navigate(`/decision-tips/${id}`)} className="cursor-pointer">
+                  <div onClick={() => navigate(`/decision-tips/${id}`, {
+                    state: {
+                      industry: industry,
+                      stage: stage,
+                      location: area
+                    }
+                  })} className="cursor-pointer">
                     <ApplicationStep
                       number={3}
                       title="Decision"

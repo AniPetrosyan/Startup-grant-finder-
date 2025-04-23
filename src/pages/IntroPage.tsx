@@ -26,7 +26,7 @@ const SignUpInfoPage = () => {
                         <p className="text-2xl font-bold mb-10 text-[#45625D]">Thanks for signing up!</p>
                         <p className="text-center text-xl mb-10 text-[#45625D]">
                             <Typewriter text="Discovering startup grants just got easier. Pomegrant simplifies the search by recommending grants tailored to your startup.
-Effortlessly explore opportunities, save your favorites, and track your progress all in one place! Let’s make funding simple." delay={60} />
+                            Effortlessly explore opportunities, save your favorites, and track your progress all in one place! Let’s make funding simple." delay={60} />
                         </p>
 
                         <Button

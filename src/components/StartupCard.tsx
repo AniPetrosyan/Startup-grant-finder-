@@ -22,7 +22,7 @@ const StartupCard: React.FC<StartupCardProps> = ({
   return (
     <div
       className={cn(
-        "border rounded-xl p-4 mb-4 cursor-pointer transition-colors",
+        "border rounded-xl p-4 mb-4 cursor-pointer transition-colors bg-[#F7FAFA]",
         isSelected ? "bg-[#E4F2E2] border-green-200" : "border-gray-300"
       )}
       onClick={onClick}

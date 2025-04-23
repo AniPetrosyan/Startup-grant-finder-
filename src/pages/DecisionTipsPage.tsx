@@ -5,17 +5,34 @@ import { ArrowLeft } from "lucide-react";
 import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
 import { useParams } from "react-router-dom";
-import ApplicationStep from "@/components/ApplicationStep";
+import { useEffect } from "react";
 
 const DecisionTipsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [industry, setIndustry] = React.useState<string | null>(null);
+  const [stage, setStage] = React.useState<string | null>(null);
+  const [area, setArea] = React.useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
 
   const startupName = location.state?.startup || null;
 
+  // Update the states based on the location state
+  useEffect(() => {
+    // Set the industry, stage, and area from the location state
+    setIndustry(location.state?.industry || null);
+    setStage(location.state?.stage || null);
+    setArea(location.state?.location || null);
+  }, [location]);
+
   const handleBack = () => {
-    navigate(`/opportunity/${id}`);
+    navigate(`/opportunity/${id}`, {
+      state: {
+        industry: industry,
+        stage: stage,
+        location: area
+      }
+    });
   };
 
   return (
