@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -59,7 +58,6 @@ const OpportunityDetailPage = () => {
     });
   };
 
-  // Define content for each opportunity
   const opportunityDetails = {
     "venture-lab": {
       name: "Venture Lab",
@@ -103,7 +101,6 @@ const OpportunityDetailPage = () => {
     }
   };
 
-  // Get current opportunity details or use default values
   const currentOpportunity = opportunityDetails[id as keyof typeof opportunityDetails] || {
     name: "Unknown Opportunity",
     funding: "Funding details not available",
