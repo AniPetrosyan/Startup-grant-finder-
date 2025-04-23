@@ -4,19 +4,34 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
+import { useParams } from "react-router-dom";
+import { useEffect } from "react";
 
 const DecisionTipsPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  
+  const [industry, setIndustry] = React.useState<string | null>(null);
+  const [stage, setStage] = React.useState<string | null>(null);
+  const [area, setArea] = React.useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+
   const startupName = location.state?.startup || null;
 
+  // Update the states based on the location state
+  useEffect(() => {
+    // Set the industry, stage, and area from the location state
+    setIndustry(location.state?.industry || null);
+    setStage(location.state?.stage || null);
+    setArea(location.state?.location || null);
+  }, [location]);
+
   const handleBack = () => {
-    navigate("/home", { 
-      state: { 
-        fromInterviewTips: true,
-        startup: startupName
-      } 
+    navigate(`/opportunity/${id}`, {
+      state: {
+        industry: industry,
+        stage: stage,
+        location: area
+      }
     });
   };
 
@@ -28,9 +43,9 @@ const DecisionTipsPage = () => {
             <button onClick={handleBack} className="p-1 mb-4">
               <ArrowLeft className="h-5 w-5" />
             </button>
-            
+
             <h1 className="text-3xl font-bold mb-6">Decision Tips</h1>
-            
+
             <div className="space-y-6">
               <div>
                 <h2 className="text-lg font-semibold text-[#5A8AA8]">1. Know Your Startup's Needs</h2>
@@ -40,7 +55,7 @@ const DecisionTipsPage = () => {
                   <li>Are you at MVP, pre-revenue, or scaling stage?</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h2 className="text-lg font-semibold text-[#5A8AA8]">2. Geography & Industry Fit</h2>
                 <ul className="list-disc pl-5 mt-2 space-y-2">
@@ -49,7 +64,7 @@ const DecisionTipsPage = () => {
                   <li>Look at the startup alumni – are they similar to yours?</li>
                 </ul>
               </div>
-              
+
               <div>
                 <h2 className="text-lg font-semibold text-[#5A8AA8]">1. Mentorship & Network</h2>
                 <ul className="list-disc pl-5 mt-2 space-y-2">
@@ -59,7 +74,7 @@ const DecisionTipsPage = () => {
               </div>
             </div>
           </div>
-          
+
           <BottomNavigation activeTab="Home" />
         </div>
       </PhoneFrame>

@@ -4,24 +4,58 @@ import { ArrowLeft } from "lucide-react";
 import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Button } from "@/components/ui/button";
+import ApplicationStep from "@/components/ApplicationStep";
+import { useState } from "react";
+import { useEffect } from "react";
+
 
 const OpportunityDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const [interviewActive, setInterviewActive] = useState(false);
+  const [decisionActive, setDecisionActive] = useState(false);
+  const [industry, setIndustry] = useState<string | null>(null);
+  const [stage, setStage] = useState<string | null>(null);
+  const [area, setArea] = useState<string | null>(null);
+
+  // Check if coming back from various pages to activate appropriate steps
+  useEffect(() => {
+    // Check if we came from opportunity detail (step 1) or application page
+    if (location.state?.fromApplication) {
+      setInterviewActive(true);
+    }
+
+    // Check if we came from interview tips page (step 2)
+    if (location.state?.fromInterviewTips) {
+      setInterviewActive(true);
+      setDecisionActive(true);
+    }
+
+    // Set the industry, stage, and area from the location state
+    setIndustry(location.state?.industry || null);
+    setStage(location.state?.stage || null);
+    setArea(location.state?.location || null);
+  }, [location]);
 
   const handleBack = () => {
-    const startupName = id === "venture-lab" ? "Venture Lab" : "Y Combinator";
-    navigate("/home", { 
-      state: { 
-        fromOpportunityDetail: true,
-        startup: startupName
-      } 
+    navigate("/home", {
+      state: {
+        industry: industry,
+        stage: stage,
+        location: area
+      }
     });
   };
 
   const handleApply = () => {
-    navigate(`/apply/${id}`);
+    navigate(`/apply/${id}`, {
+      state: {
+        industry: industry,
+        stage: stage,
+        location: area
+      }
+    });
   };
 
   const opportunityDetails = {
@@ -82,22 +116,22 @@ const OpportunityDetailPage = () => {
             <button onClick={handleBack} className="p-1 mb-4">
               <ArrowLeft className="h-5 w-5" />
             </button>
-            
+
             <h1 className="text-3xl font-bold mb-8 text-[#45625D]">{currentOpportunity.name}</h1>
-            
+
             <div className="space-y-6">
               <div className="bg-gray-100 p-4 rounded-md mb-6">
                 <h2 className="text-xl font-semibold mb-2">Funding Details</h2>
                 <p className="text-lg font-medium">{currentOpportunity.funding}</p>
               </div>
-              
+
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">About</h2>
                 <p className="text-gray-700">
                   {currentOpportunity.about}
                 </p>
               </div>
-              
+
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">Eligibility</h2>
                 <ul className="list-disc pl-5 space-y-1">
@@ -106,16 +140,48 @@ const OpportunityDetailPage = () => {
                   ))}
                 </ul>
               </div>
-              
-              <Button 
-                onClick={handleApply}
-                className="w-full bg-[#3F7856] hover:bg-[#2F5B42] text-white"
-              >
-                Apply Now
-              </Button>
+              <div className="mb-6">
+                <h2 className="text-xl font-semibold mb-2">Application Process</h2>
+                <div className="bg-white rounded-md border">
+
+                  <div onClick={() => handleApply()} className="cursor-pointer">
+                    <ApplicationStep
+                      number={1}
+                      title="Apply online"
+                      isActive={true}
+                    />
+                  </div>
+                  <div onClick={() => navigate(`/interview-tips/${id}`, {
+                    state: {
+                      industry: industry,
+                      stage: stage,
+                      location: area
+                    }
+                  })} className="cursor-pointer">
+                    <ApplicationStep
+                      number={2}
+                      title="Interview"
+                      isActive={interviewActive}
+                    />
+                  </div>
+                  <div onClick={() => navigate(`/decision-tips/${id}`, {
+                    state: {
+                      industry: industry,
+                      stage: stage,
+                      location: area
+                    }
+                  })} className="cursor-pointer">
+                    <ApplicationStep
+                      number={3}
+                      title="Decision"
+                      isActive={decisionActive}
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          
+
           <BottomNavigation activeTab="Home" />
         </div>
       </PhoneFrame>

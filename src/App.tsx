@@ -16,6 +16,7 @@ import Begin from "./pages/BeginPage";
 import Login from "./pages/LoginPage";
 import SignUp from "./pages/SignUpPage";
 import SignUpInfoPage from "./pages/SignUpInfoPage";
+import Intro from "./pages/IntroPage";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Begin />} />
+          <Route path="/intro" element={<Intro />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signup-info" element={<SignUpInfoPage />} />
@@ -36,8 +38,8 @@ const App = () => (
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/opportunity/:id" element={<OpportunityDetailPage />} />
           <Route path="/apply/:id" element={<ApplicationChecklistPage />} />
-          <Route path="/interview-tips" element={<InterviewTipsPage />} />
-          <Route path="/decision-tips" element={<DecisionTipsPage />} />
+          <Route path="/interview-tips/:id" element={<InterviewTipsPage />} />
+          <Route path="/decision-tips/:id" element={<DecisionTipsPage />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

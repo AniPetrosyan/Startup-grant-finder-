@@ -22,6 +22,7 @@ const Login = () => {
             <PhoneFrame>
                 <div className="px-8 flex flex-col h-full">
                     <div className="h-full flex flex-col items-center justify-center">
+                    {/* <p className="text-2xl font-bold mb-10 text-[#45625D]">Hello!</p> */}
                         <p className="text-2xl font-bold mb-10 text-[#45625D]">Login</p>
                         <div className="w-full mb-5">
                         <label className="justify-left text-sm font-medium mb-1" style={{textAlign: 'left'}}>Email</label>

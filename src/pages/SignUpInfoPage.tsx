@@ -9,14 +9,20 @@ import { useState } from "react";
 const SignUpInfoPage = () => {
     const [industry, setIndustry] = useState("");
     const [stage, setStage] = useState("");
-    const [location, setLocation] = useState("");
+    const [area, setArea] = useState("");
 
     const navigate = useNavigate();
 
     // Still need to implement sign up functionality (pass in selected properties to home page)
     // For now, just navigate to index (home) page on sign up
     const handleClick = () => {
-        navigate(`/home`);
+        navigate("/home", {
+            state: {
+                industry: industry,
+                stage: stage,
+                location: area
+            }
+        });
     };
 
     return (
@@ -24,8 +30,7 @@ const SignUpInfoPage = () => {
             <PhoneFrame>
                 <div className="px-8 flex flex-col h-full">
                     <div className="h-full flex flex-col items-center justify-center">
-                        <p className="text-2xl font-bold mb-10 text-[#45625D]">Thanks for signing up!</p>
-                        <p className="text-center text-xl font-bold mb-10 text-[#45625D]"> We just need a few more details to tailor the grants for you.</p>
+                        <p className="text-center text-xl font-bold mb-10 text-[#45625D]">We just need a few more details to tailor the grants for you.</p>
 
                         <div className="w-full mb-5">
                             <label className="block text-sm font-medium mb-1">Industry</label>
@@ -61,7 +66,7 @@ const SignUpInfoPage = () => {
 
                         <div className="w-full mb-5">
                             <label className="block text-sm font-medium mb-1">Location</label>
-                            <Select value={location} onValueChange={setLocation}>
+                            <Select value={area} onValueChange={setArea}>
                                 <SelectTrigger>
                                     <SelectValue placeholder="Select Location" />
                                 </SelectTrigger>
@@ -79,11 +84,8 @@ const SignUpInfoPage = () => {
                             className="w-full bg-[#7EC384] hover:bg-[#6db073] text-base py-6 mt-5 border-none"
                             onClick={handleClick}
                         >
-                            Create Account
+                            Find My Recommended Grants
                         </Button>
-                    </div>
-                    <div className="overflow-auto pb-10 flex items-center justify-center">
-                        <p className="font-medium mb-2 text-[#0D171C]">Already have an account? <Link to="/login" className="text-[#3F7856]">Login</Link></p>
                     </div>
                 </div>
             </PhoneFrame>
