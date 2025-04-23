@@ -1,13 +1,31 @@
 import React from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Bookmark, BookmarkCheck } from "lucide-react";
 import PhoneFrame from "@/components/PhoneFrame";
 import BottomNavigation from "@/components/BottomNavigation";
 import { Button } from "@/components/ui/button";
 import ApplicationStep from "@/components/ApplicationStep";
 import { useState } from "react";
 import { useEffect } from "react";
+import { useSavedOpportunities } from "@/lib/SavedOpportunitiesContext";
+import { Label } from "@/components/ui/label";
 
+interface FundingOpportunity {
+  id: number | string;
+  title: string;
+  amount: string;
+  deadline: string;
+  type: string;
+  stage: string;
+  industry: string;
+  teamSize: string;
+  description: string;
+  progress?: {
+    application: boolean;
+    interview: boolean;
+    decision: boolean;
+  };
+}
 
 const OpportunityDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -18,34 +36,84 @@ const OpportunityDetailPage = () => {
   const [industry, setIndustry] = useState<string | null>(null);
   const [stage, setStage] = useState<string | null>(null);
   const [area, setArea] = useState<string | null>(null);
+  
+  const { saveOpportunity, removeOpportunity, isOpportunitySaved, updateProgress } = useSavedOpportunities();
+  const isSaved = id ? isOpportunitySaved(id) : false;
 
-  // Check if coming back from various pages to activate appropriate steps
+  // Get the opportunity details from location state
+  const opportunity: FundingOpportunity = location.state?.opportunity;
+
+  // If no opportunity data is available, show a loading state or redirect
+  if (!opportunity) {
+    navigate("/home", { replace: true });
+    return null;
+  }
+
+  // Update useEffect to handle progress updates
   useEffect(() => {
-    // Check if we came from opportunity detail (step 1) or application page
+    // Activate steps based on navigation history
     if (location.state?.fromApplication) {
       setInterviewActive(true);
     }
 
-    // Check if we came from interview tips page (step 2)
     if (location.state?.fromInterviewTips) {
+      setInterviewActive(true);
+    }
+
+    // Activate decision step if user has visited the decision tips page
+    if (location.state?.fromDecisionTips) {
       setInterviewActive(true);
       setDecisionActive(true);
     }
 
-    // Set the industry, stage, and area from the location state
+    // Update progress if saved
+    if (location.state?.fromApplication && id && isSaved) {
+      updateProgress(id, { application: true });
+    }
+
+    if (location.state?.fromInterviewTips && id && isSaved) {
+      updateProgress(id, { interview: true });
+    }
+
+    if (location.state?.fromDecisionTips && id && isSaved) {
+      updateProgress(id, { decision: true });
+    }
+
+    // Set industry and stage from location state
     setIndustry(location.state?.industry || null);
     setStage(location.state?.stage || null);
     setArea(location.state?.location || null);
-  }, [location]);
+  }, [location, id, isSaved, updateProgress]);
 
   const handleBack = () => {
-    navigate("/home", {
-      state: {
-        industry: industry,
-        stage: stage,
-        location: area
-      }
-    });
+    // Special handling for Y Combinator and Venture Lab
+    const isSpecialProgram = id === "y-combinator" || id === "venture-lab";
+    
+    if (isSpecialProgram) {
+      // For Y Combinator and Venture Lab, navigate to home
+      navigate("/home");
+    } else if (location.state?.fromExplore) {
+      navigate("/explore", {
+        state: {
+          industry: industry,
+          stage: stage,
+          location: area
+        }
+      });
+    } else {
+      // For regular opportunities
+      navigate(`/opportunity/${id}`, {
+        state: {
+          opportunity: opportunity,
+          industry: industry,
+          stage: stage,
+          location: area,
+          fromApplication: location.state?.fromApplication,
+          fromInterviewTips: location.state?.fromInterviewTips,
+          fromDecisionTips: location.state?.fromDecisionTips
+        }
+      });
+    }
   };
 
   const handleApply = () => {
@@ -53,59 +121,98 @@ const OpportunityDetailPage = () => {
       state: {
         industry: industry,
         stage: stage,
-        location: area
+        location: area,
+        opportunity: opportunity,
+        fromApplication: true,
+        allStepsCompleted: location.state?.allStepsCompleted
       }
     });
   };
 
-  const opportunityDetails = {
-    "venture-lab": {
-      name: "Venture Lab",
-      funding: "$5,000 grant",
-      about: "Venture Lab provides early-stage funding and mentorship for student entrepreneurs at the university. The program includes workshops, networking events, and access to resources to help you develop your startup idea.",
-      eligibility: [
-        "Current university student or recent graduate",
-        "Innovative business idea or early prototype",
-        "Commitment to participate in program activities"
-      ]
-    },
-    "google-startups": {
-      name: "Google for Startups Black",
-      funding: "$100,000 in funding",
-      about: "Google for Startups Black Founders Fund provides non-dilutive funding to Black-led startups that have participated in Google's programs or have been nominated by Google's partner community. The program includes Google Cloud credits, Google.org ads grants, and hands-on support from Google employees.",
-      eligibility: [
-        "Black-led startup based in the US",
-        "Raised less than $3M in funding",
-        "Demonstrates traction and impact in their community"
-      ]
-    },
-    "thiel-fellowship": {
-      name: "Thiel Fellowship",
-      funding: "$100,000 over two years",
-      about: "The Thiel Fellowship is a two-year program for young people who want to build new things. Fellows receive $100,000 and mentorship from the Thiel Foundation's network of founders, investors, and scientists.",
-      eligibility: [
-        "22 years old or younger",
-        "Willing to postpone or leave college to pursue your idea",
-        "Innovative startup concept with growth potential"
-      ]
-    },
-    "y-combinator": {
-      name: "Y Combinator",
-      funding: "$150,000 investment",
-      about: "Y Combinator is a startup accelerator that invests in a wide range of startups. The program includes mentorship, funding, and connections to help you scale your startup and prepare for future funding rounds.",
-      eligibility: [
-        "Startup at any stage of development",
-        "Strong founding team",
-        "Innovative product or service with growth potential"
-      ]
+  const handleSaveToggle = () => {
+    if (!id || !opportunity) return;
+    
+    if (isSaved) {
+      removeOpportunity(id);
+    } else {
+      const opportunityToSave = {
+        id: id,
+        title: opportunity.title,
+        deadline: opportunity.deadline,
+        hasDeadline: opportunity.deadline !== "Rolling",
+        amount: opportunity.amount,
+        type: opportunity.type,
+        stage: opportunity.stage,
+        progress: {
+          application: false,
+          interview: false,
+          decision: false
+        }
+      };
+      saveOpportunity(opportunityToSave);
     }
   };
 
-  const currentOpportunity = opportunityDetails[id as keyof typeof opportunityDetails] || {
-    name: "Unknown Opportunity",
-    funding: "Funding details not available",
-    about: "No information available for this opportunity.",
-    eligibility: ["No eligibility criteria specified"]
+  const handleDecisionClick = () => {
+    if (!interviewActive) return; // Only allow clicking if interview step is active
+    
+    if (id === "y-combinator") {
+      navigate(`/yc-decision-tips/${id}`, {
+        state: {
+          industry: industry,
+          stage: stage,
+          location: area,
+          opportunity: opportunity,
+          fromApplication: true,
+          fromInterviewTips: true,
+          fromDecisionTips: true,
+          allStepsCompleted: true
+        }
+      });
+    } else if (id === "venture-lab") {
+      navigate(`/venture-lab-decision-tips/${id}`, {
+        state: {
+          industry: industry,
+          stage: stage,
+          location: area,
+          opportunity: opportunity,
+          fromApplication: true,
+          fromInterviewTips: true,
+          fromDecisionTips: true,
+          allStepsCompleted: true
+        }
+      });
+    } else {
+      navigate(`/decision-tips/${id}`, {
+        state: {
+          industry: industry,
+          stage: stage,
+          location: area,
+          opportunity: opportunity,
+          fromApplication: true,
+          fromInterviewTips: true,
+          fromDecisionTips: true,
+          allStepsCompleted: true
+        }
+      });
+    }
+  };
+
+  const getOpportunityAmount = (fundingString: string | undefined) => {
+    if (!fundingString) return undefined;
+    
+    // Extract numbers that might include commas and decimals
+    const matches = fundingString.match(/[\d,]+(\.\d+)?/);
+    if (!matches) return undefined;
+    
+    // Clean the extracted number by removing commas
+    const cleanAmount = matches[0].replace(/,/g, '');
+    const numericValue = parseFloat(cleanAmount);
+    
+    if (isNaN(numericValue)) return undefined;
+    
+    // Return the formatted amount with $ symbol
+    return `$${cleanAmount}`;
   };
 
   return (
@@ -113,68 +220,130 @@ const OpportunityDetailPage = () => {
       <PhoneFrame>
         <div className="flex flex-col h-full bg-white">
           <div className="flex-1 p-6 overflow-y-auto">
-            <button onClick={handleBack} className="p-1 mb-4">
-              <ArrowLeft className="h-5 w-5" />
-            </button>
+            <div className="flex justify-between items-center mb-4">
+              <button onClick={handleBack} className="p-1">
+                <ArrowLeft className="h-5 w-5" />
+              </button>
+              <button 
+                onClick={handleSaveToggle}
+                className="p-1 hover:bg-gray-100 rounded-full transition-colors"
+              >
+                {isSaved ? (
+                  <BookmarkCheck className="h-6 w-6 text-[#45625D]" />
+                ) : (
+                  <Bookmark className="h-6 w-6" />
+                )}
+              </button>
+            </div>
 
-            <h1 className="text-3xl font-bold mb-8 text-[#45625D]">{currentOpportunity.name}</h1>
+            <h1 className="text-3xl font-bold mb-8 text-[#45625D]">{opportunity.title}</h1>
 
             <div className="space-y-6">
               <div className="bg-gray-100 p-4 rounded-md mb-6">
                 <h2 className="text-xl font-semibold mb-2">Funding Details</h2>
-                <p className="text-lg font-medium">{currentOpportunity.funding}</p>
+                <p className="text-lg font-medium">{getOpportunityAmount(opportunity.amount)}</p>
               </div>
 
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">About</h2>
                 <p className="text-gray-700">
-                  {currentOpportunity.about}
+                  {opportunity.description}
                 </p>
               </div>
 
               <div className="mb-6">
-                <h2 className="text-xl font-semibold mb-2">Eligibility</h2>
-                <ul className="list-disc pl-5 space-y-1">
-                  {currentOpportunity.eligibility.map((criterion, index) => (
-                    <li key={index}>{criterion}</li>
-                  ))}
-                </ul>
+                <h2 className="text-xl font-semibold mb-2">Details</h2>
+                <div className="space-y-3">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Type</span>
+                    <span className="font-medium">{opportunity.type}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Stage</span>
+                    <span className="font-medium">{opportunity.stage}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Industry</span>
+                    <span className="font-medium">{opportunity.industry}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Team Size</span>
+                    <span className="font-medium">{opportunity.teamSize}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Deadline</span>
+                    <span className="font-medium">{opportunity.deadline}</span>
+                  </div>
+                </div>
               </div>
+
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">Application Process</h2>
                 <div className="bg-white rounded-md border">
-
-                  <div onClick={() => handleApply()} className="cursor-pointer">
+                  <div onClick={handleApply} className="cursor-pointer">
                     <ApplicationStep
                       number={1}
                       title="Apply online"
                       isActive={true}
                     />
                   </div>
-                  <div onClick={() => navigate(`/interview-tips/${id}`, {
-                    state: {
-                      industry: industry,
-                      stage: stage,
-                      location: area
-                    }
-                  })} className="cursor-pointer">
+                  <div 
+                    onClick={() => {
+                      if (!interviewActive && !location.state?.fromApplication) return;
+                      if (id === "y-combinator") {
+                        navigate(`/yc-interview-tips/${id}`, {
+                          state: {
+                            industry: industry,
+                            stage: stage,
+                            location: area,
+                            opportunity: opportunity,
+                            fromApplication: true,
+                            fromInterviewTips: true,
+                            fromDecisionTips: location.state?.fromDecisionTips
+                          }
+                        });
+                      } else if (id === "venture-lab") {
+                        navigate(`/venture-lab-interview-tips/${id}`, {
+                          state: {
+                            industry: industry,
+                            stage: stage,
+                            location: area,
+                            opportunity: opportunity,
+                            fromApplication: true,
+                            fromInterviewTips: true,
+                            fromDecisionTips: location.state?.fromDecisionTips
+                          }
+                        });
+                      } else {
+                        navigate(`/interview-tips/${id}`, {
+                          state: {
+                            industry: industry,
+                            stage: stage,
+                            location: area,
+                            opportunity: opportunity,
+                            fromApplication: true,
+                            fromInterviewTips: true,
+                            fromDecisionTips: location.state?.fromDecisionTips
+                          }
+                        });
+                      }
+                    }}
+                    className={`cursor-pointer ${!interviewActive && !location.state?.fromApplication ? 'opacity-50' : ''}`}
+                  >
                     <ApplicationStep
                       number={2}
                       title="Interview"
-                      isActive={interviewActive}
+                      isActive={interviewActive || location.state?.fromApplication}
                     />
                   </div>
-                  <div onClick={() => navigate(`/decision-tips/${id}`, {
-                    state: {
-                      industry: industry,
-                      stage: stage,
-                      location: area
-                    }
-                  })} className="cursor-pointer">
+                  <div 
+                    onClick={handleDecisionClick}
+                    className={`cursor-pointer ${!interviewActive && !location.state?.fromApplication ? 'opacity-50' : ''}`}
+                  >
                     <ApplicationStep
                       number={3}
-                      title="Decision"
-                      isActive={decisionActive}
+                      title="Decision Tips"
+                      isActive={interviewActive || location.state?.fromApplication}
                     />
                   </div>
                 </div>

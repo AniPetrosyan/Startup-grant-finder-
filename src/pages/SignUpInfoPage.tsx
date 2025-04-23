@@ -5,24 +5,27 @@ import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useState } from "react";
+import { useUserProfile } from "@/lib/UserProfileContext";
 
 const SignUpInfoPage = () => {
-    const [industry, setIndustry] = useState("");
-    const [stage, setStage] = useState("");
-    const [area, setArea] = useState("");
+    const { profile, updateProfile } = useUserProfile();
+    const [industry, setIndustry] = useState(profile.industry);
+    const [stage, setStage] = useState(profile.stage);
+    const [area, setArea] = useState(profile.location);
+    const [teamSize, setTeamSize] = useState(profile.teamSize || "");
 
     const navigate = useNavigate();
 
-    // Still need to implement sign up functionality (pass in selected properties to home page)
-    // For now, just navigate to index (home) page on sign up
     const handleClick = () => {
-        navigate("/home", {
-            state: {
-                industry: industry,
-                stage: stage,
-                location: area
-            }
+        // Update profile with selected values
+        updateProfile({
+            industry: industry,
+            stage: stage,
+            location: area,
+            teamSize: teamSize
         });
+        
+        navigate("/home");
     };
 
     return (
@@ -76,6 +79,22 @@ const SignUpInfoPage = () => {
                                     <SelectItem value="Boston">Boston</SelectItem>
                                     <SelectItem value="Los Angeles">Los Angeles</SelectItem>
                                     <SelectItem value="Chicago">Chicago</SelectItem>
+                                </SelectContent>
+                            </Select>
+                        </div>
+
+                        <div className="w-full mb-5">
+                            <label className="block text-sm font-medium mb-1">Team Size</label>
+                            <Select value={teamSize} onValueChange={setTeamSize}>
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select Team Size" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="solo">Solo Founder</SelectItem>
+                                    <SelectItem value="2-5">2-5 Team Members</SelectItem>
+                                    <SelectItem value="6-10">6-10 Team Members</SelectItem>
+                                    <SelectItem value="11-20">11-20 Team Members</SelectItem>
+                                    <SelectItem value="20+">20+ Team Members</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>

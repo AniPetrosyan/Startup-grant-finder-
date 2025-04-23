@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Search, X, Check, ArrowLeft } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +16,11 @@ type FundingOpportunity = {
   amount: string;
   progress: string;
   deadline: string;
+  type: string;
+  stage: string;
+  industry: string;
+  teamSize: string;
+  description: string;
 };
 
 const ExplorePage = () => {
@@ -75,38 +79,243 @@ const ExplorePage = () => {
   const fundingResults: FundingOpportunity[] = [
     {
       id: 1,
-      title: "The Grant Fund",
-      amount: "$150k",
-      progress: "0%",
-      deadline: "3/15/2025"
+      title: "NSF SBIR Phase I Grant",
+      amount: "$275,000",
+      progress: "Open",
+      deadline: "3/15/2025",
+      type: "Grant",
+      stage: "Pre-seed",
+      industry: "Technology",
+      teamSize: "2-5",
+      description: "Research and development funding for innovative technologies"
     },
     {
       id: 2,
-      title: "The Patrick Grant",
-      amount: "$100k",
-      progress: "0%",
-      deadline: "6/15/2025"
+      title: "Y Combinator W24",
+      amount: "$500,000",
+      progress: "Open",
+      deadline: "6/15/2025",
+      type: "Accelerator",
+      stage: "Seed",
+      industry: "Open",
+      teamSize: "2-5",
+      description: "Leading startup accelerator program with investment"
     },
     {
       id: 3,
-      title: "Women Grant",
-      amount: "$200k",
-      progress: "0%",
-      deadline: "2/10/2025"
+      title: "Women Founders Fund",
+      amount: "$75,000",
+      progress: "Open",
+      deadline: "2/10/2025",
+      type: "Grant",
+      stage: "Pre-seed",
+      industry: "Open",
+      teamSize: "solo",
+      description: "Supporting women entrepreneurs in early stages"
     },
     {
       id: 4,
-      title: "Venture Lab",
-      amount: "$10k",
-      progress: "0%",
-      deadline: "2/27/2025"
+      title: "Healthcare Innovation Grant",
+      amount: "$150,000",
+      progress: "Open",
+      deadline: "4/20/2025",
+      type: "Grant",
+      stage: "Series A",
+      industry: "Healthcare",
+      teamSize: "6-10",
+      description: "Advancing healthcare technology solutions"
     },
     {
       id: 5,
-      title: "Y Combinator",
-      amount: "$150k",
-      progress: "0%",
-      deadline: "2/15/2025"
+      title: "Climate Tech Fellowship",
+      amount: "$90,000",
+      progress: "Open",
+      deadline: "5/1/2025",
+      type: "Fellowship",
+      stage: "Pre-seed",
+      industry: "Technology",
+      teamSize: "solo",
+      description: "Supporting innovators in climate technology"
+    },
+    {
+      id: 6,
+      title: "EdTech Accelerator Program",
+      amount: "$120,000",
+      progress: "Open",
+      deadline: "3/30/2025",
+      type: "Accelerator",
+      stage: "Seed",
+      industry: "Education",
+      teamSize: "2-5",
+      description: "Accelerator focused on education technology startups"
+    },
+    {
+      id: 7,
+      title: "Fintech Innovation Award",
+      amount: "$200,000",
+      progress: "Open",
+      deadline: "4/15/2025",
+      type: "Grant",
+      stage: "Series A",
+      industry: "Finance",
+      teamSize: "6-10",
+      description: "Supporting innovative financial technology solutions"
+    },
+    {
+      id: 8,
+      title: "Social Impact Fund",
+      amount: "$50,000",
+      progress: "Open",
+      deadline: "5/15/2025",
+      type: "Investment",
+      stage: "Seed",
+      industry: "Open",
+      teamSize: "2-5",
+      description: "Investment for startups with social impact focus"
+    },
+    {
+      id: 9,
+      title: "Deep Tech Grant",
+      amount: "$300,000",
+      progress: "Open",
+      deadline: "6/1/2025",
+      type: "Grant",
+      stage: "Series A",
+      industry: "Technology",
+      teamSize: "11-20",
+      description: "Supporting deep technology research and development"
+    },
+    {
+      id: 10,
+      title: "First-Time Founders Program",
+      amount: "$25,000",
+      progress: "Open",
+      deadline: "3/1/2025",
+      type: "Grant",
+      stage: "Pre-seed",
+      industry: "Open",
+      teamSize: "solo",
+      description: "Supporting first-time entrepreneurs"
+    },
+    {
+      id: 11,
+      title: "TechCrunch Disrupt Startup Battlefield",
+      amount: "$100,000",
+      progress: "Open",
+      deadline: "5/30/2025",
+      type: "Competition",
+      stage: "Seed",
+      industry: "Technology",
+      teamSize: "2-5",
+      description: "Premier startup competition with live pitch to top VCs"
+    },
+    {
+      id: 12,
+      title: "Startup World Cup",
+      amount: "$1,000,000",
+      progress: "Open",
+      deadline: "4/15/2025",
+      type: "Competition",
+      stage: "Series A",
+      industry: "Open",
+      teamSize: "6-10",
+      description: "Global startup competition with regional preliminaries"
+    },
+    {
+      id: 13,
+      title: "CleanTech Innovation Challenge",
+      amount: "$250,000",
+      progress: "Open",
+      deadline: "7/1/2025",
+      type: "Competition",
+      stage: "Pre-seed",
+      industry: "Technology",
+      teamSize: "2-5",
+      description: "Competition for innovative clean technology solutions"
+    },
+    {
+      id: 14,
+      title: "HealthTech Innovator Challenge",
+      amount: "$150,000",
+      progress: "Open",
+      deadline: "6/30/2025",
+      type: "Competition",
+      stage: "Seed",
+      industry: "Healthcare",
+      teamSize: "2-5",
+      description: "Competition for breakthrough healthcare technologies"
+    },
+    {
+      id: 15,
+      title: "Sequoia Capital Seed Fund",
+      amount: "$2,000,000",
+      progress: "Open",
+      deadline: "Rolling",
+      type: "Investor",
+      stage: "Seed",
+      industry: "Open",
+      teamSize: "2-5",
+      description: "Seed funding from leading VC firm with strong portfolio support"
+    },
+    {
+      id: 16,
+      title: "Andreessen Horowitz Series A",
+      amount: "$5,000,000",
+      progress: "Open",
+      deadline: "Rolling",
+      type: "Investor",
+      stage: "Series A",
+      industry: "Technology",
+      teamSize: "6-10",
+      description: "Series A funding from top-tier VC with extensive network"
+    },
+    {
+      id: 17,
+      title: "Khosla Ventures Healthcare Fund",
+      amount: "$3,000,000",
+      progress: "Open",
+      deadline: "Rolling",
+      type: "Investor",
+      stage: "Seed",
+      industry: "Healthcare",
+      teamSize: "2-5",
+      description: "Healthcare-focused investment from experienced VC firm"
+    },
+    {
+      id: 18,
+      title: "500 Global Accelerator",
+      amount: "$150,000",
+      progress: "Open",
+      deadline: "3/30/2025",
+      type: "Investor",
+      stage: "Pre-seed",
+      industry: "Open",
+      teamSize: "2-5",
+      description: "Global early-stage VC program with extensive mentor network"
+    },
+    {
+      id: 19,
+      title: "MIT $100K Competition",
+      amount: "$100,000",
+      progress: "Open",
+      deadline: "4/1/2025",
+      type: "Competition",
+      stage: "Pre-seed",
+      industry: "Open",
+      teamSize: "2-5",
+      description: "Prestigious university startup competition with mentorship"
+    },
+    {
+      id: 20,
+      title: "Accel Partners Growth Fund",
+      amount: "$10,000,000",
+      progress: "Open",
+      deadline: "Rolling",
+      type: "Investor",
+      stage: "Series B",
+      industry: "Technology",
+      teamSize: "11-20",
+      description: "Growth-stage funding for scaling technology companies"
     }
   ];
 
@@ -166,6 +375,37 @@ const ExplorePage = () => {
     if (tag === area) {
       setArea(null);
     }
+  };
+
+  const filterResults = () => {
+    return fundingResults.filter(opportunity => {
+      // Filter by search term
+      if (searchValue && !opportunity.title.toLowerCase().includes(searchValue.toLowerCase())) {
+        return false;
+      }
+
+      // Filter by tab
+      if (activeTab !== "All" && !opportunity.type.includes(activeTab.slice(0, -1))) {
+        return false;
+      }
+
+      // Filter by stage suggestions
+      if (selectedSuggestions.length > 0 && !selectedSuggestions.includes(opportunity.stage)) {
+        return false;
+      }
+
+      // Filter by industry
+      if (industry && opportunity.industry !== industry && opportunity.industry !== "Open") {
+        return false;
+      }
+
+      // Filter by stage
+      if (stage && opportunity.stage !== stage) {
+        return false;
+      }
+
+      return true;
+    });
   };
 
   if (showSearchResults) {
@@ -255,7 +495,7 @@ const ExplorePage = () => {
               </div>
 
               <div className="space-y-3">
-                {fundingResults.map(result => (
+                {filterResults().map(result => (
                   <FundingCard key={result.id} opportunity={result} />
                 ))}
               </div>
