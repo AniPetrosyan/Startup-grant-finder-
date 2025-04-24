@@ -31,17 +31,20 @@ const Index = () => {
   return (
     <div className="min-h-screen h-screen w-screen flex items-center justify-center bg-[#f3f3f3]">
       <PhoneFrame>
-      <div className="overflow-auto">
-        <HomeScreen
-          selectedStartup={selectedStartup}
-          onSelectStartup={handleSelectStartup}
-          industry={profile.industry}
-          stage={profile.stage}
-          area={profile.location}
-          profile={profile}
-        />
+        <div className="overflow-auto">
+          <HomeScreen
+            selectedStartup={selectedStartup}
+            onSelectStartup={handleSelectStartup}
+            industry={profile.industry}
+            stage={profile.stage}
+            area={profile.location}
+            profile={profile}
+          />
         </div>
-        <BottomNavigation activeTab="Home" />
+        <div className="h-16">
+          <BottomNavigation activeTab="Home" />
+        </div>
+
       </PhoneFrame>
     </div>
   );
